@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Regalías de Tidal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: white;
+            color: white;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            box-sizing: border-box;
+        }
+        .container {
+            background-color: #1e1e1e;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(149, 94, 255, 0.2);
+            text-align: center;
+            width: 100%;
+        }
+        input, button {
+            width: 100%;
+            padding: 15px 10px;
+            margin-top: 12px;
+            background-color: #ffffff;
+            color: black;
+            border-radius: 5px;
+            font-size: 18px;
+            box-sizing: border-box;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+            border: none;
+            text-align: center;
+        }
+        input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px #955eff;
+        }
+        button {
+            background-color: #955eff;
+            color: white;
+            transition: transform 0.3s ease;
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 20px;
+        }
+        button:hover {
+            background-color: #7a33ff;
+        }
+        p {
+            margin-top: 15px;
+            margin-bottom: 10px;
+            font-size: 50px;
+            font-weight: 500;
+            color: #955eff;
+        }
+        h1 {
+            font-weight: normal;
+        }
+        h1 b {
+            font-weight: bold;
+        }
+        h2 {
+            font-size: 22px;
+            color: #ffffff;
+            font-weight: normal;
+            margin-bottom: 10px;
+        }
+        @keyframes fadeInScale {
+            0% {
+                transform: scale(0.95);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        .animate-on-load {
+            animation: fadeInScale 0.5s ease-out forwards;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1><b>Calculadora</b> de Regalías de Tidal</h1>
+        <input type="number" id="streams" placeholder="Número de reproducciones" onkeypress="keyPress(event)">
+        <button class="animate-on-load" onclick="calculateRoyalty()">Calcular</button>
+        <h2>Regalías estimadas:</h2>
+        <p id="result">$0.00</p>
+    </div>
+
+    <script>
+        function calculateRoyalty() {
+            var streamsInput = document.getElementById('streams').value;
+            var rate = 0.013; // Tidal's average payout rate
+
+            var streams = parseFloat(streamsInput);
+            if (isNaN(streams) || streams <= 0) {
+                streams = 0;
+            }
+
+            var result = streams * rate;
+            if (result > 0) {
+                animateValue("result", 0, result, 500);
+            } else {
+                document.getElementById('result').innerText = `$0.00`;
+            }
+        }
+
+        function animateValue(id, start, end, duration) {
+            let obj = document.getElementById(id);
+            let current = start;
+            let range = end - start;
+            let stepTime = Math.max(20, duration / Math.abs(range));
+            let increment = (end - start) * stepTime / duration;
+            let timer = setInterval(function() {
+                current += increment;
+                obj.innerText = `$${current.toFixed(2)}`;
+                if ((increment > 0 && current >= end) || (increment < 0 && current <= end)) {
+                    clearInterval(timer);
+                    obj.innerText = `$${end.toFixed(2)}`;
+                }
+            }, stepTime);
+        }
+
+        function keyPress(event) {
+            if (event.key === "Enter") {
+                calculateRoyalty();
+            }
+        }
+    </script>
+</body>
+</html>
